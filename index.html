@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="./img/favicon.ico">
+
+	<title>The Things Network</title>
+
+        <link href="./css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="./css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="./css/highlight.css">
+        <link href="./css/base.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            <a class="navbar-brand" href=".">The Things Network</a>
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+            
+                <li class="active">
+                    <a href=".">Home</a>
+                </li>
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="disabled">
+                    <a rel="next" >
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li class="disabled">
+                    <a rel="prev" >
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#ttn-architecture-specifications">TTN - Architecture Specifications</a></li>
+        
+            <li><a href="#foreword">Foreword</a></li>
+        
+            <li><a href="#overview">Overview</a></li>
+        
+            <li><a href="#node">Node</a></li>
+        
+            <li><a href="#gateway">Gateway</a></li>
+        
+            <li><a href="#application">Application</a></li>
+        
+            <li><a href="#router">Router</a></li>
+        
+            <li><a href="#broker">Broker</a></li>
+        
+            <li><a href="#network-server">Network Server</a></li>
+        
+            <li><a href="#handler">Handler</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<h1 id="ttn-architecture-specifications">TTN - Architecture Specifications</h1>
+<h2 id="foreword">Foreword</h2>
+<p>This document hereby refers to the content of the whole website. Any contributors is welcomed
+and could give a hand in several manners:</p>
+<ul>
+<li>Looking for and correcting typos</li>
+<li>Add relevant and non redundant information</li>
+<li>Complete a part marked as //TODO</li>
+</ul>
+<p><strong>Regardless of what you'll attempt, make sure to check <a href="https://github.com/TheThingsNetwork/Specifications/issues">the issues list on
+GitHub</a> before doing anything</strong>. Thus, if nobody is already working on something
+related, open an issue with a clear and concise title and briefly explain your incoming changes
+in the description. Then, fork the project, do your work, and create a Pull Request on the
+original repository. </p>
+<p>To sum up:</p>
+<ul>
+<li>Check <a href="https://github.com/TheThingsNetwork/Specifications/issues">GitHub issues</a></li>
+<li>Open a new issue if no one exist</li>
+<li>Fork the repository</li>
+<li>Create a Pull Request once you're done</li>
+</ul>
+<p><em><p align="center">Thanks a lot !</p></em></p>
+<h2 id="overview">Overview</h2>
+<p>The following document describe the specifications for The Things Network's Architecture
+version 1. These specifications focus on the network architecture which includes 4 kind of
+components:</p>
+<ul>
+<li>Routers </li>
+<li>Brokers</li>
+<li>Network Servers</li>
+<li>Handlers</li>
+</ul>
+<p>Incidentally, those components are interacting with other external entities on which we have -
+if any - only few control :</p>
+<ul>
+<li>Nodes (also known as end-devices)</li>
+<li>Gateways</li>
+<li>Applications</li>
+</ul>
+<hr />
+<p><img alt="overview" src="./img/overview.svg" />
+<p align="center"><em>Network components</em></p></p>
+<hr />
+<h2 id="node">Node</h2>
+<p>Nodes or end-devices refer to one end of the chain. Devices emit signals using
+<a href="https://www.lora-alliance.org/What-Is-LoRa/Technology"><em>LoRa</em></a> modulation and frequency range towards Gateways. They are split into
+3 classes: </p>
+<ul>
+<li><strong>A</strong>: Cannot receive any data from the network unless they've initiated the communication</li>
+<li><strong>B</strong>: Can receive data from the network at precisely scheduled windows (Beacons)</li>
+<li><strong>C</strong>: Can receive data at any time from the network</li>
+</ul>
+<p>Incidentally, class A requires less power than B which requires less power than C. 
+An end-device has an address either assigned by the Network or self-defined. An end-device
+also has a specific secret application session key and a network session key </p>
+<p>These specifications primarly focus on the class A. Future network versions will implement
+mechanisms to handle class B and class C but they are irrevelant with the current document.</p>
+<h2 id="gateway">Gateway</h2>
+<p>Gateways might be seen as a way to transform multiple messages emitters into one much more
+demanding emitter. Therefore, a Gateway gathers <a href="https://www.lora-alliance.org/What-Is-LoRa/Technology"><em>LoRa</em></a> signals coming from a
+bunch of near end-devices. A given device does not need to know the nearest gateways, nor it
+has to communicate with a specific one - signals are simply broadcasted into the wild open. </p>
+<p>Gateways receive signals which reach them, and forward the message to a dedicated Router. The
+Data could be either a sensor result or a specific network command such as a connection
+request. A Gateway actually send incoming packets to a router, one-by-one, and after having
+wrapped each of them into a <a href="https://fr.wikipedia.org/wiki/JavaScript_Object_Notation">json</a> structure holding meta-data about the Gateway itself (such as
+Gateway's address, a timestamp and GPS coordinates if available).</p>
+<p>Gateways can also emit packets coming from the network toward a Node using the <a href="https://www.lora-alliance.org/What-Is-LoRa/Technology"><em>LoRa
+technology</em></a>. In fact, Gateways are in charge of taking care of emission at a
+scheduled time defined by the network meaning that the network is able to send packets to
+Gateways at any moment, regardless of their emission time (see more about the two-windows
+response mechanism //TODO add a link). </p>
+<h2 id="application">Application</h2>
+<h2 id="router">Router</h2>
+<p>Routers are entry points of the network from Nodes perspective. A Router receives packets
+gathered by some Gateways and initially transmitted by Nodes. Then, it forwards those packets
+to one or several Brokers. The communication is seemingly bi-directional: Routers may also
+transfer packets from Broker to Gateways. </p>
+<hr />
+<p><img alt="overview" src="./img/uplink_router.svg" />
+<p align="center"><em>Uplink forwarding</em></p></p>
+<hr />
+<h2 id="broker">Broker</h2>
+<p>Brokers have a global vision of a network's part. They are in charge of several nodes, meaning
+that they will handle packets coming from those nodes (thereby, they are able to tell to
+Routers if they can handle a given packet). Several Routers may send packets coming from the
+same end-device (shared by several segments / Gateways), all duplicates are managed by the
+Broker and are sent to a corresponding Handler.</p>
+<p>A Broker is thereby able to check the integrity of a packet and is closely communicating with a
+Network Server in order to administrate the related device. As an order of magnitude, Brokers
+are designed to be in charge of a whole country or region (if the region has enough activity to
+deserve a dedicated Broker).</p>
+<h2 id="network-server">Network Server</h2>
+<p>Network servers are processing <a href="https://en.wikipedia.org/wiki/Media_access_control">MAC</a> commands emitted by end-devices as well as taking care
+of the data rates and the frequency of the devices. Network Servers would emit commands to
+optimize the network by adjusting end-devices data rates / frequencies unless the node is
+requesting to keep its configuration as is. </p>
+<p>For the moment, a single Network Server will be associated for each Broker. No communication
+mechanisms between Network Servers is planned for the first version. Also, it won't be possible
+for a Broker to query another Network Server than the one it has been assigned to. Those
+features might be part of a second version. </p>
+<h2 id="handler">Handler</h2>
+<p>Handlers materialize the entry point to the network for client Applications. They are secure
+referees which encode and decode data coming from application before transmitting them to a
+Broker of the network. Therefore, they are in charge of handling applications secret keys and
+only communicate an application id to Brokers (as well as a specific network session key,
+described in further sections). This way, the whole chain is able to forward a packet to the
+corresponding Handler without having any information about either the recipient (but a
+meaningless id) or the content. </p>
+<p>Because a given Handler is able to decrypt the data payload of a given packet, it could
+also implement mechanisms such as Geolocation and send to the corresponding application some
+interesting meta-data.</p>
+<p>An Handler could be either part of an application or a standalone trusty server on which
+application may register. The Things Network will provide Handlers as part of the whole network
+but - and this is true for any component - anyone could create its own implementation as long
+as it is compliant to the following specifications.</p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            
+            <center>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</center>
+        </footer>
+
+        <script src="./js/jquery-1.10.2.min.js"></script>
+        <script src="./js/bootstrap-3.0.3.min.js"></script>
+        <script src="./js/highlight.pack.js"></script>
+        <script src="./js/base.js"></script>
+    </body>
+</html>
