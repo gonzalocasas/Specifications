@@ -3,7 +3,7 @@ TTN - Architecture Specifications
 
 ## Foreword
 
-This document hereby refers to the content of the whole website. Any contributors is welcomed
+This document hereby refers to the content of the whole website. Any contributor is welcomed
 and could give a hand in several manners:
 
 - Looking for and correcting typos
@@ -28,7 +28,7 @@ To sum up:
 ## Overview
 
 The following document describe the specifications for The Things Network's Architecture
-version 1. These specifications focus on the network architecture which includes 4 kind of
+version 1. These specifications focus on the network architecture which includes 4 kinds of
 components:
 
 - Routers 
@@ -37,7 +37,7 @@ components:
 - Handlers
 
 Incidentally, those components are interacting with other external entities on which we have -
-if any - only few control :
+if any - only few controls:
 
 - Nodes (also known as end-devices)
 - Gateways
@@ -73,8 +73,8 @@ has to communicate with a specific one - signals are simply broadcasted into the
 Gateways receive signals which reach them, and forward the message to a dedicated Router. The
 Data could be either a sensor result or a specific network command such as a connection
 request. A Gateway actually send incoming packets to a router, one-by-one, and after having
-wrapped each of them into a [json][json] structure holding meta-data about the Gateway itself (such as
-Gateway's address, a timestamp and GPS coordinates if available).
+wrapped each of them into a [json][json] structure holding meta-data about the Gateway itself
+(such as Gateway's address, a timestamp and GPS coordinates if available).
 
 Gateways can also emit packets coming from the network toward a Node using the [*LoRa
 technology*][lora_technology]. In fact, Gateways are in charge of taking care of emission at a
@@ -135,7 +135,7 @@ Because a given Handler is able to decrypt the data payload of a given packet, i
 also implement mechanisms such as Geolocation and send to the corresponding application some
 interesting meta-data.
 
-An Handler could be either part of an application or a standalone trusty server on which
+A Handler could be either part of an application or a standalone trusty server on which
 application may register. The Things Network will provide Handlers as part of the whole network
 but - and this is true for any component - anyone could create its own implementation as long
 as it is compliant to the following specifications.
