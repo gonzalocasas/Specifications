@@ -28,7 +28,7 @@ configured to interact with that precise router. A router nevertheless might rec
 communication from several gateways. Thus, gateways are completely unknown from a router - and
 would remain unknown during the router lifecycle.
 
-A router is thereby a machine one which gateway will attempt to connect. This assumes that the
+A router is thereby a machine on which gateway will attempt to connect. This assumes that the
 router is accessible via a static IP address or solvable through a DNS service. The whole
 protocol used by gateways can be found [here][gateway_protocol] and could be sum up the
 following ways:
@@ -36,7 +36,7 @@ following ways:
 - Gateways initiate communication with a router
 - Gateways send data using a json structure and containing one or several packets
 - The router acknowledge reception of data
-- Gateways could be protected by a firewall or could used a NAT, routers cannot initiate communications
+- Gateways could be protected by a firewall or could use a NAT, routers cannot initiate communications
 - Gateways might trigger and pull the router periodically to keep a connexion open
 
 ### Downlink communication
@@ -63,6 +63,8 @@ through the first window will cause the second one to never be opened.
 Having said that, a downlink communication could be initiated by either an Application or a
 Network Server in response of an uplink message from a device. The role of a router is to
 forward those messages, not to trigger or schedule them.
+
+## 
 
 [gateway_protocol]: https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT
 [lorawan]: https://www.lora-alliance.org/portals/0/specs/LoRaWAN%20Specification%201R0.pdf
