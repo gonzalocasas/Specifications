@@ -64,7 +64,116 @@ Having said that, a downlink communication could be initiated by either an Appli
 Network Server in response of an uplink message from a device. The role of a router is to
 forward those messages, not to trigger or schedule them.
 
-## 
+## Router decoupling
+
+In order to communicate with the outside world, we'll split the router in three parts: 
+
+- The core router
+- An uplink adapter
+- A downlink adapter
+
+The idea is to avoid to tighly couple the router core features with the way it is
+communicating. By doing such a separation of concerns, we allow the router to evolve and change
+its communication protocol at any moment, without any impact on the core mechanisms. Thus, as
+long as the adapters remain compliant to a given interface they can be switched on demand. 
+
+All three components will share a common representation of a packet tagged with a version
+number. As long as all component use compatible representation of a packet, they sould be able
+to communicate. 
+
+Packets are `json` structure with the following structure:
+
+```json
+{
+    "time": <String>,
+    "tmst": <Number>,
+    "freq": <Number>,
+    "chan": <Number>,
+    "rfch": <Number>,
+    "stat": <Number>,
+    "modu": <String>,
+    "datr": <Number>, // In case of GFSK modulation
+    "datr": <String>, // In case of LoRa modulation
+    "codr": <String>,
+    "rssi": <Number>,
+    "lsnr": <Number>,
+    "lsnr": <Number>,
+    "size": <Number>,
+    "data": <String>
+}
+```
+
+More information about the meaning of those fields could be found in the [semtech protocol
+description][gateway_protocol].
+
+
+### Uplink adapter
+
+We consider the following methods for the Uplink adapter (hereby known as `UpAdapter`):
+
+```haskell
+-- Notify the gateway that the given packet has been received
+ack :: UpAdapter, Packet -> Unit
+ack (adapter, packet)
+
+-- Send a downlink packet to a gateway
+forward :: UpAdapter, Packet -> Unit
+forward (adapter, packet)
+```
+
+The uplink adapter is thereby in charge of queuing incoming packet, and trigger the router to
+handle them properly. Because data coming from a gateway aren' formatted in the right way and
+also because a gateway might send several packets through the same message, it is under the
+uplink adapter responsability to decode and interpret the data accordingly. 
+
+### Downlink adapter
+
+We consider the following methods for the Downlink adapter (hereby known as `DownAdapter`):
+
+```haskell
+-- Send a packet to every available brokers. This method should trigger 
+-- back some calls on the router to inform the router about which Broker 
+-- are indeed responsible for the Packet.
+broadcast :: DownAdapter, Packet -> Unit
+broadcast (adapter, packet)
+
+-- Forward an uplink packet to a list of brokers using their addresses
+forward :: DownAdapter, BrokerAddr[], Packet -> Unit
+forward (adapter, [broAddr1, broAddr2], packet)
+```
+
+The downlink adapter should implement mechanism to handle network discovering (`broadcast`).
+Basically, this will be done when there is no known broker for a given packet. The downlink
+adapter is thereby in charge of registering device addresses to the core router once brokers
+have been discovered. 
+
+### Core router
+
+The core router (hereby known as `Router`) handle all the router logic. It also supplies a
+concise interface to allow both adapter to trigger actions. Any error or success from both
+adapter might trigger one of the following method.
+
+``` haskell
+-- Ask the router to handle a specific error. 
+handleError :: Router, Error -> Unit
+handleError (router, e)
+
+-- Handle an incoming uplink packet
+handleUplink :: Router, Packet -> Unit
+handleUplink (router, packet)
+
+-- Handle an incoming downlink packet
+handleDownlink :: Router, Packet -> Unit
+handleDownlink (router, packet)
+
+-- Register a bunch of brokers address for a given device
+registerDevice :: Router, DeviceAddr, BrokerAddr[] -> Unit
+registerDevice (router, devAddr, [broAddr1, broAddr2])
+```
+
+The `handleError` method gives adapter a way to notify the router of an unresolved transaction
+or an incorrect behavior from the network. Errors are detailed below and should be explicit
+enough to allow the router to recover from it. 
 
 [gateway_protocol]: https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT
 [lorawan]: https://www.lora-alliance.org/portals/0/specs/LoRaWAN%20Specification%201R0.pdf
