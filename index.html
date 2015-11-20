@@ -55,6 +55,36 @@
                 </li>
             
             
+            
+                <li >
+                    <a href="router/">Router</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="broker/">Broker</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="networkserver/">Network Server</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="handler/">Handler</a>
+                </li>
+            
+            
+            
+                <li >
+                    <a href="development/">Development</a>
+                </li>
+            
+            
             </ul>
 
             <!-- Search, Navigation and Repo links -->
@@ -64,8 +94,8 @@
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
-                <li class="disabled">
-                    <a rel="prev" >
+                <li >
+                    <a rel="prev" href="router/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -79,11 +109,11 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#ttn-architecture-specifications">TTN - Architecture Specifications</a></li>
+        <li class="main active"><a href="#overview">Overview</a></li>
         
             <li><a href="#foreword">Foreword</a></li>
         
-            <li><a href="#overview">Overview</a></li>
+            <li><a href="#components">Components</a></li>
         
             <li><a href="#node">Node</a></li>
         
@@ -104,7 +134,7 @@
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="ttn-architecture-specifications">TTN - Architecture Specifications</h1>
+<h1 id="overview">Overview</h1>
 <h2 id="foreword">Foreword</h2>
 <p>This document hereby refers to the content of the whole website. Any contributor is welcomed
 and could give a hand in several manners:</p>
@@ -126,7 +156,7 @@ original repository. </p>
 <li>Create a Pull Request once you're done</li>
 </ul>
 <p><em><p align="center">Thanks a lot !</p></em></p>
-<h2 id="overview">Overview</h2>
+<h2 id="components">Components</h2>
 <p>The following document describe the specifications for The Things Network's Architecture
 version 1. These specifications focus on the network architecture which includes 4 kinds of
 components:</p>
@@ -168,9 +198,9 @@ bunch of near end-devices. A given device does not need to know the nearest gate
 has to communicate with a specific one - signals are simply broadcasted into the wild open. </p>
 <p>Gateways receive signals which reach them, and forward the message to a dedicated Router. The
 Data could be either a sensor result or a specific network command such as a connection
-request. A Gateway actually send incoming packets to a router, one-by-one, and after having
-wrapped each of them into a <a href="https://fr.wikipedia.org/wiki/JavaScript_Object_Notation">json</a> structure holding meta-data about the Gateway itself
-(such as Gateway's address, a timestamp and GPS coordinates if available).</p>
+request. A Gateway actually send incoming packets to a router after having wrapped each of them
+into a <a href="https://fr.wikipedia.org/wiki/JavaScript_Object_Notation">json</a> structure holding meta-data about the Gateway itself (such as Gateway's
+identifier, a timestamp and GPS coordinates if available).</p>
 <p>Gateways can also emit packets coming from the network toward a Node using the <a href="https://www.lora-alliance.org/What-Is-LoRa/Technology"><em>LoRa
 technology</em></a>. In fact, Gateways are in charge of taking care of emission at a
 scheduled time defined by the network meaning that the network is able to send packets to
