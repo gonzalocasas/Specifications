@@ -113,6 +113,8 @@
         
             <li><a href="#role">Role</a></li>
         
+            <li><a href="#router-decoupling">Router decoupling</a></li>
+        
     
     </ul>
 </div></div>
@@ -171,7 +173,98 @@ through the first window will cause the second one to never be opened. </p>
 <p>Having said that, a downlink communication could be initiated by either an Application or a
 Network Server in response of an uplink message from a device. The role of a router is to
 forward those messages, not to trigger or schedule them.</p>
-<h2 id="_1"></h2></div>
+<h2 id="router-decoupling">Router decoupling</h2>
+<p>In order to communicate with the outside world, we'll split the router in three parts: </p>
+<ul>
+<li>The core router</li>
+<li>An uplink adapter</li>
+<li>A downlink adapter</li>
+</ul>
+<p>The idea is to avoid to tighly couple the router core features with the way it is
+communicating. By doing such a separation of concerns, we allow the router to evolve and change
+its communication protocol at any moment, without any impact on the core mechanisms. Thus, as
+long as the adapters remain compliant to a given interface they can be switched on demand. </p>
+<p>All three components will share a common representation of a packet tagged with a version
+number. As long as all component use compatible representation of a packet, they sould be able
+to communicate. </p>
+<p>Packets are <code>json</code> structure with the following structure:</p>
+<pre><code class="json">{
+    &quot;time&quot;: &lt;String&gt;,
+    &quot;tmst&quot;: &lt;Number&gt;,
+    &quot;freq&quot;: &lt;Number&gt;,
+    &quot;chan&quot;: &lt;Number&gt;,
+    &quot;rfch&quot;: &lt;Number&gt;,
+    &quot;stat&quot;: &lt;Number&gt;,
+    &quot;modu&quot;: &lt;String&gt;,
+    &quot;datr&quot;: &lt;Number&gt;, // In case of GFSK modulation
+    &quot;datr&quot;: &lt;String&gt;, // In case of LoRa modulation
+    &quot;codr&quot;: &lt;String&gt;,
+    &quot;rssi&quot;: &lt;Number&gt;,
+    &quot;lsnr&quot;: &lt;Number&gt;,
+    &quot;lsnr&quot;: &lt;Number&gt;,
+    &quot;size&quot;: &lt;Number&gt;,
+    &quot;data&quot;: &lt;String&gt;
+}
+</code></pre>
+
+<p>More information about the meaning of those fields could be found in the <a href="https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT">semtech protocol
+description</a>.</p>
+<h3 id="uplink-adapter">Uplink adapter</h3>
+<p>We consider the following methods for the Uplink adapter (hereby known as <code>UpAdapter</code>):</p>
+<pre><code class="haskell">-- Notify the gateway that the given packet has been received
+ack :: UpAdapter, Packet -&gt; Unit
+ack (adapter, packet)
+
+-- Send a downlink packet to a gateway
+forward :: UpAdapter, Packet -&gt; Unit
+forward (adapter, packet)
+</code></pre>
+
+<p>The uplink adapter is thereby in charge of queuing incoming packet, and trigger the router to
+handle them properly. Because data coming from a gateway aren' formatted in the right way and
+also because a gateway might send several packets through the same message, it is under the
+uplink adapter responsability to decode and interpret the data accordingly. </p>
+<h3 id="downlink-adapter">Downlink adapter</h3>
+<p>We consider the following methods for the Downlink adapter (hereby known as <code>DownAdapter</code>):</p>
+<pre><code class="haskell">-- Send a packet to every available brokers. This method should trigger 
+-- back some calls on the router to inform the router about which Broker 
+-- are indeed responsible for the Packet.
+broadcast :: DownAdapter, Packet -&gt; Unit
+broadcast (adapter, packet)
+
+-- Forward an uplink packet to a list of brokers using their addresses
+forward :: DownAdapter, BrokerAddr[], Packet -&gt; Unit
+forward (adapter, [broAddr1, broAddr2], packet)
+</code></pre>
+
+<p>The downlink adapter should implement mechanism to handle network discovering (<code>broadcast</code>).
+Basically, this will be done when there is no known broker for a given packet. The downlink
+adapter is thereby in charge of registering device addresses to the core router once brokers
+have been discovered. </p>
+<h3 id="core-router">Core router</h3>
+<p>The core router (hereby known as <code>Router</code>) handle all the router logic. It also supplies a
+concise interface to allow both adapter to trigger actions. Any error or success from both
+adapter might trigger one of the following method.</p>
+<pre><code class="haskell">-- Ask the router to handle a specific error. 
+handleError :: Router, Error -&gt; Unit
+handleError (router, e)
+
+-- Handle an incoming uplink packet
+handleUplink :: Router, Packet -&gt; Unit
+handleUplink (router, packet)
+
+-- Handle an incoming downlink packet
+handleDownlink :: Router, Packet -&gt; Unit
+handleDownlink (router, packet)
+
+-- Register a bunch of brokers address for a given device
+registerDevice :: Router, DeviceAddr, BrokerAddr[] -&gt; Unit
+registerDevice (router, devAddr, [broAddr1, broAddr2])
+</code></pre>
+
+<p>The <code>handleError</code> method gives adapter a way to notify the router of an unresolved transaction
+or an incorrect behavior from the network. Errors are detailed below and should be explicit
+enough to allow the router to recover from it. </p></div>
         </div>
 
         <footer class="col-md-12">
