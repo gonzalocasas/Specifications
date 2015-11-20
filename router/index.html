@@ -141,7 +141,7 @@ separately. </p>
 configured to interact with that precise router. A router nevertheless might received
 communication from several gateways. Thus, gateways are completely unknown from a router - and
 would remain unknown during the router lifecycle.</p>
-<p>A router is thereby a machine one which gateway will attempt to connect. This assumes that the
+<p>A router is thereby a machine on which gateway will attempt to connect. This assumes that the
 router is accessible via a static IP address or solvable through a DNS service. The whole
 protocol used by gateways can be found <a href="https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT">here</a> and could be sum up the
 following ways:</p>
@@ -149,7 +149,7 @@ following ways:</p>
 <li>Gateways initiate communication with a router</li>
 <li>Gateways send data using a json structure and containing one or several packets</li>
 <li>The router acknowledge reception of data</li>
-<li>Gateways could be protected by a firewall or could used a NAT, routers cannot initiate communications</li>
+<li>Gateways could be protected by a firewall or could use a NAT, routers cannot initiate communications</li>
 <li>Gateways might trigger and pull the router periodically to keep a connexion open</li>
 </ul>
 <h3 id="downlink-communication">Downlink communication</h3>
@@ -170,7 +170,8 @@ through the first window will cause the second one to never be opened. </p>
 <hr />
 <p>Having said that, a downlink communication could be initiated by either an Application or a
 Network Server in response of an uplink message from a device. The role of a router is to
-forward those messages, not to trigger or schedule them.</p></div>
+forward those messages, not to trigger or schedule them.</p>
+<h2 id="_1"></h2></div>
         </div>
 
         <footer class="col-md-12">
