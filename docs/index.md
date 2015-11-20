@@ -1,5 +1,5 @@
-TTN - Architecture Specifications
-=================================
+Overview
+========
 
 ## Foreword
 
@@ -25,7 +25,7 @@ To sum up:
 
 *<p align="center">Thanks a lot !</p>*
 
-## Overview
+## Components
 
 The following document describe the specifications for The Things Network's Architecture
 version 1. These specifications focus on the network architecture which includes 4 kinds of
@@ -72,9 +72,9 @@ has to communicate with a specific one - signals are simply broadcasted into the
 
 Gateways receive signals which reach them, and forward the message to a dedicated Router. The
 Data could be either a sensor result or a specific network command such as a connection
-request. A Gateway actually send incoming packets to a router, one-by-one, and after having
-wrapped each of them into a [json][json] structure holding meta-data about the Gateway itself
-(such as Gateway's address, a timestamp and GPS coordinates if available).
+request. A Gateway actually send incoming packets to a router after having wrapped each of them
+into a [json][json] structure holding meta-data about the Gateway itself (such as Gateway's
+identifier, a timestamp and GPS coordinates if available).
 
 Gateways can also emit packets coming from the network toward a Node using the [*LoRa
 technology*][lora_technology]. In fact, Gateways are in charge of taking care of emission at a
