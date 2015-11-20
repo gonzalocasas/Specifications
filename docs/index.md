@@ -92,7 +92,7 @@ to one or several Brokers. The communication is seemingly bi-directional: Router
 transfer packets from Broker to Gateways. 
 
 -------------------
-![overview](img/uplink_router.svg)
+![Uplink forwarding](img/uplink_router.svg)
 <p align="center">*Uplink forwarding*</p>
 -------------------
 
@@ -139,6 +139,11 @@ A Handler could be either part of an application or a standalone trusty server o
 application may register. The Things Network will provide Handlers as part of the whole network
 but - and this is true for any component - anyone could create its own implementation as long
 as it is compliant to the following specifications.
+
+-------------------
+![Uplink to application](img/uplink_broker.svg)
+<p align="center">*Uplink to an Application*</p>
+-------------------
 
 [lora_technology]: https://www.lora-alliance.org/What-Is-LoRa/Technology
 [json]: https://fr.wikipedia.org/wiki/JavaScript_Object_Notation
