@@ -51,7 +51,7 @@
             
             
                 <li class="active">
-                    <a href=".">Home</a>
+                    <a href=".">Overview</a>
                 </li>
             
             
@@ -106,7 +106,7 @@
 
 <h1 id="ttn-architecture-specifications">TTN - Architecture Specifications</h1>
 <h2 id="foreword">Foreword</h2>
-<p>This document hereby refers to the content of the whole website. Any contributors is welcomed
+<p>This document hereby refers to the content of the whole website. Any contributor is welcomed
 and could give a hand in several manners:</p>
 <ul>
 <li>Looking for and correcting typos</li>
@@ -128,7 +128,7 @@ original repository. </p>
 <p><em><p align="center">Thanks a lot !</p></em></p>
 <h2 id="overview">Overview</h2>
 <p>The following document describe the specifications for The Things Network's Architecture
-version 1. These specifications focus on the network architecture which includes 4 kind of
+version 1. These specifications focus on the network architecture which includes 4 kinds of
 components:</p>
 <ul>
 <li>Routers </li>
@@ -137,7 +137,7 @@ components:</p>
 <li>Handlers</li>
 </ul>
 <p>Incidentally, those components are interacting with other external entities on which we have -
-if any - only few control :</p>
+if any - only few controls:</p>
 <ul>
 <li>Nodes (also known as end-devices)</li>
 <li>Gateways</li>
@@ -169,8 +169,8 @@ has to communicate with a specific one - signals are simply broadcasted into the
 <p>Gateways receive signals which reach them, and forward the message to a dedicated Router. The
 Data could be either a sensor result or a specific network command such as a connection
 request. A Gateway actually send incoming packets to a router, one-by-one, and after having
-wrapped each of them into a <a href="https://fr.wikipedia.org/wiki/JavaScript_Object_Notation">json</a> structure holding meta-data about the Gateway itself (such as
-Gateway's address, a timestamp and GPS coordinates if available).</p>
+wrapped each of them into a <a href="https://fr.wikipedia.org/wiki/JavaScript_Object_Notation">json</a> structure holding meta-data about the Gateway itself
+(such as Gateway's address, a timestamp and GPS coordinates if available).</p>
 <p>Gateways can also emit packets coming from the network toward a Node using the <a href="https://www.lora-alliance.org/What-Is-LoRa/Technology"><em>LoRa
 technology</em></a>. In fact, Gateways are in charge of taking care of emission at a
 scheduled time defined by the network meaning that the network is able to send packets to
@@ -183,7 +183,7 @@ gathered by some Gateways and initially transmitted by Nodes. Then, it forwards 
 to one or several Brokers. The communication is seemingly bi-directional: Routers may also
 transfer packets from Broker to Gateways. </p>
 <hr />
-<p><img alt="overview" src="./img/uplink_router.svg" />
+<p><img alt="Uplink forwarding" src="./img/uplink_router.svg" />
 <p align="center"><em>Uplink forwarding</em></p></p>
 <hr />
 <h2 id="broker">Broker</h2>
@@ -216,10 +216,14 @@ meaningless id) or the content. </p>
 <p>Because a given Handler is able to decrypt the data payload of a given packet, it could
 also implement mechanisms such as Geolocation and send to the corresponding application some
 interesting meta-data.</p>
-<p>An Handler could be either part of an application or a standalone trusty server on which
+<p>A Handler could be either part of an application or a standalone trusty server on which
 application may register. The Things Network will provide Handlers as part of the whole network
 but - and this is true for any component - anyone could create its own implementation as long
-as it is compliant to the following specifications.</p></div>
+as it is compliant to the following specifications.</p>
+<hr />
+<p><img alt="Uplink to application" src="./img/uplink_broker.svg" />
+<p align="center"><em>Uplink to an Application</em></p></p>
+<hr /></div>
         </div>
 
         <footer class="col-md-12">
