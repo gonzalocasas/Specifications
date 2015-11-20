@@ -1,2 +1,5 @@
 site_name: The Things Network
 theme: yeti
+
+pages:
+    - Overview: 'index.md'
