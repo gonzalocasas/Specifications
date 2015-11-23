@@ -121,7 +121,20 @@
 <h1 id="broker">Broker</h1>
 <h2 id="role">Role</h2>
 <p>Brokers constitute the heart of the network. They hold the logic that makes every other
-component work together (routers, network servers and handlers).</p></div>
+component work together (routers, network servers and handlers). They play a role of mediator,
+making sure that packets are correct and handling communications between other components. To
+each broker is associated a given network server with which it is working closely. We can see
+the network server as external ressources of computing and storage to which a broker could
+refer at any time. </p>
+<p>Therefore, a broker is in charge of a given node. </p>
+<h3 id="uplink-communications">Uplink communications</h3>
+<p>Also, a broker receive transmissions from routers. Transmissions have two aspects:</p>
+<ul>
+<li>Discovering message</li>
+<li>Direct message</li>
+</ul>
+<h3 id="downlink-communication">Downlink communication</h3>
+<h3 id="network-commands">Network Commands</h3></div>
         </div>
 
         <footer class="col-md-12">

@@ -97,7 +97,7 @@
         }, 
         {
             "location": "/broker/", 
-            "text": "Broker\n\n\nRole\n\n\nBrokers constitute the heart of the network. They hold the logic that makes every other\ncomponent work together (routers, network servers and handlers).", 
+            "text": "Broker\n\n\nRole\n\n\nBrokers constitute the heart of the network. They hold the logic that makes every other\ncomponent work together (routers, network servers and handlers). They play a role of mediator,\nmaking sure that packets are correct and handling communications between other components. To\neach broker is associated a given network server with which it is working closely. We can see\nthe network server as external ressources of computing and storage to which a broker could\nrefer at any time. \n\n\nTherefore, a broker is in charge of a given node. \n\n\nUplink communications\n\n\nAlso, a broker receive transmissions from routers. Transmissions have two aspects:\n\n\n\n\nDiscovering message\n\n\nDirect message\n\n\n\n\nDownlink communication\n\n\nNetwork Commands", 
             "title": "Broker"
         }, 
         {
@@ -107,7 +107,7 @@
         }, 
         {
             "location": "/broker/#role", 
-            "text": "Brokers constitute the heart of the network. They hold the logic that makes every other\ncomponent work together (routers, network servers and handlers).", 
+            "text": "Brokers constitute the heart of the network. They hold the logic that makes every other\ncomponent work together (routers, network servers and handlers). They play a role of mediator,\nmaking sure that packets are correct and handling communications between other components. To\neach broker is associated a given network server with which it is working closely. We can see\nthe network server as external ressources of computing and storage to which a broker could\nrefer at any time.   Therefore, a broker is in charge of a given node.   Uplink communications  Also, a broker receive transmissions from routers. Transmissions have two aspects:   Discovering message  Direct message   Downlink communication  Network Commands", 
             "title": "Role"
         }, 
         {
