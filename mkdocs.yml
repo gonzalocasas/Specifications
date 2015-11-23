@@ -1,5 +1,5 @@
-site_name: The Things Network
-theme: yeti
+site_name: 'The Things Network'
+theme_dir: 'theme'
 
 pages:
     - Overview: 'index.md'
@@ -8,3 +8,14 @@ pages:
     - Network Server: 'networkserver.md'
     - Handler: 'handler.md'
     - Development: 'development.md'
+
+extra:
+    disqus: 'thethingsnetwork'
+    meta:
+        version: '1.0.0'
+        status: 'draft'
+        lead: 'Matthias Benkort'
+        collaborators:
+            - 'Johan Stokking'
+            - 'Hylke Visser'
+            - 'Thomas Telkamp'
