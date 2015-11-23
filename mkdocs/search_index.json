@@ -97,7 +97,7 @@
         }, 
         {
             "location": "/broker/", 
-            "text": "Broker\n\n\nRole", 
+            "text": "Broker\n\n\nRole\n\n\nBrokers constitute the heart of the network. They hold the logic that makes every other\ncomponent work together (routers, network servers and handlers).", 
             "title": "Broker"
         }, 
         {
@@ -107,7 +107,7 @@
         }, 
         {
             "location": "/broker/#role", 
-            "text": "", 
+            "text": "Brokers constitute the heart of the network. They hold the logic that makes every other\ncomponent work together (routers, network servers and handlers).", 
             "title": "Role"
         }, 
         {
