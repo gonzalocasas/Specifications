@@ -38,7 +38,9 @@ protocol used by gateways can be found [here][gateway_protocol] and could be sum
 - Gateways send data using a json structure and containing one or several packets
 - The router acknowledge reception of data
 - Gateways could be protected by a firewall or could use a NAT, routers cannot initiate communications
-- Gateways might trigger and pull the router periodically to keep a connexion open
+- Gateways might trigger and pull the router periodically to keep a connexion open (this is
+  fairly an implementation detail, but the gateway protocol we are refering to is describing an
+  implementation. We'll see how we handle this in the next section)
 - The communication is closed after a delay (after the second receive window, cf. downlink
   communication)
 
