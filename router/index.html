@@ -130,7 +130,7 @@
 
 <h1 id="router">Router</h1>
 <h2 id="role">Role</h2>
-<p>The router's role is straightforward; It has to transfer packet coming from an emitter to the
+<p>The router's role is straightforward; It has to transfer packets coming from an emitter to the
 right recipient. The emitter and the recipient could be either:</p>
 <ul>
 <li>A gateway and a broker</li>
@@ -144,30 +144,33 @@ way. Let's distinguish communications the following way:</p>
 </ul>
 <p>Communications protocols used between, on the one hand, gateways and the router (uplink) and,
 on the other hand, the router and brokers (downlink) don't have to be identical. </p>
-<p>Both communication process have their own characteristics and behavior, they will be detailed
+<p>Both communication processes have their own characteristics and behavior, they will be detailed
 separately. </p>
 <h3 id="uplink-communication">Uplink communication</h3>
 <p>A given gateway will be connected to a router of its choice, meaning that the gateway is
-configured to interact with that precise router. A router nevertheless might received
-communication from several gateways. Thus, gateways are completely unknown from a router - and
-would remain unknown during the router lifecycle.</p>
+configured to interact with that precise router (a gateway could be configured for several
+routers, but the idea is the same; they are not allowed dynamically and won't change as long as
+the configuration remains the same). Obviously, a router might received communications from
+several gateways as well. Thus, gateways are completely unknown from a router - and would
+remain unknown during the router lifecycle.</p>
 <p>A router is thereby a machine on which gateway will attempt to connect. This assumes that the
 router is accessible via a static IP address or solvable through a DNS service. The whole
-protocol used by gateways can be found <a href="https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT">here</a> and could be sum up the
-following ways:</p>
+protocol used by gateways can be found <a href="https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT">here</a> and could be sum up as follow:</p>
 <ul>
 <li>Gateways initiate communication with a router</li>
 <li>Gateways send data using a json structure and containing one or several packets</li>
 <li>The router acknowledge reception of data</li>
 <li>Gateways could be protected by a firewall or could use a NAT, routers cannot initiate communications</li>
 <li>Gateways might trigger and pull the router periodically to keep a connexion open</li>
+<li>The communication is closed after a delay (after the second receive window, cf. downlink
+  communication)</li>
 </ul>
 <h3 id="downlink-communication">Downlink communication</h3>
-<p>As for the first version, the network will only supports devices of class A, the connexion
+<p>Because of the first version, the network will only supports devices of class A, the connexion
 between a gateway and a router would stay opened for a maximum of 2 seconds. The whole process
 is detailed in the <a href="https://www.lora-alliance.org/portals/0/specs/LoRaWAN%20Specification%201R0.pdf">LoRaWAN specifications 1.0</a> - section 3.3 Receive Windows. In few
 words though, after having emitted messages, a class A node will open two short receive windows
-and allow incoming messages from a gateway. Windows are opened exactly one and two seconds
+and will allow incoming messages from a gateway. Windows are opened exactly one and two seconds
 after the packet's emission. Sending packet at the right time is part of the gateway
 responsibility, however, scheduling the emission is part of the network's one. </p>
 <p>If any command or data have to be sent to the node, it has to be done precisely during one of
@@ -188,7 +191,7 @@ forward those messages, not to trigger or schedule them.</p>
 <li>An uplink adapter</li>
 <li>A downlink adapter</li>
 </ul>
-<p>The idea is to avoid to tighly couple the router core features with the way it is
+<p>The idea is to avoid to tightly couple the router core features with the way it is
 communicating. By doing such a separation of concerns, we allow the router to evolve and change
 its communication protocol at any moment, without any impact on the core mechanisms. Thus, as
 long as the adapters remain compliant to a given interface they can be switched on demand. </p>
@@ -209,7 +212,6 @@ to communicate. </p>
     &quot;codr&quot;: &lt;String&gt;,
     &quot;rssi&quot;: &lt;Number&gt;,
     &quot;lsnr&quot;: &lt;Number&gt;,
-    &quot;lsnr&quot;: &lt;Number&gt;,
     &quot;size&quot;: &lt;Number&gt;,
     &quot;data&quot;: &lt;String&gt;
 }
@@ -228,8 +230,8 @@ forward :: UpAdapter, Packet -&gt; Unit
 forward (adapter, packet)
 </code></pre>
 
-<p>The uplink adapter is thereby in charge of queuing incoming packet, and trigger the router to
-handle them properly. Because data coming from a gateway aren' formatted in the right way and
+<p>The uplink adapter is thereby in charge of queuing incoming packets, and trigger the router to
+handle them properly. Because data coming from a gateway aren't formatted in the right way and
 also because a gateway might send several packets through the same message, it is under the
 uplink adapter responsability to decode and interpret the data accordingly. </p>
 <h2 id="downlink-adapter">Downlink adapter</h2>
@@ -252,7 +254,7 @@ have been discovered. </p>
 <h2 id="core">Core</h2>
 <p>The core router (hereby known as <code>Router</code>) handle all the router logic. It also supplies a
 concise interface to allow both adapters to trigger actions. Any error or success from both
-adapters might trigger one of the following method.</p>
+adapters could trigger one of the following method.</p>
 <pre><code class="haskell">-- Ask the router to handle a specific error. 
 handleError :: Router, Error -&gt; Unit
 handleError (router, err)
@@ -274,7 +276,7 @@ registerDevice (router, devAddr, [broAddr1, broAddr2])
 or an incorrect behavior from the network. Errors are detailed below and should be explicit
 enough to allow the router to recover from it. </p>
 <h2 id="errors">Errors</h2>
-<p>Any error coming from any router's components should supply the following information:</p>
+<p>Any error coming from any router's components should provide the following information:</p>
 <ul>
 <li>a name / identifier </li>
 <li>a date (the moment it happens)</li>
@@ -300,8 +302,8 @@ params (err)
 </code></pre>
 
 <p>Errors types the router may encounter are listed right below. This list isn't settled and is
-likely to evolve and change during the development. However, it gives an overview of referenced
-errors. By convention, all error names are written in <a href="https://en.wikipedia.org/wiki/Snake_case"><em>snake_case</em></a>.</p>
+likely to grow during the development. However, it gives an overview of referenced errors. By
+convention, all error names are written in <a href="https://en.wikipedia.org/wiki/Snake_case"><em>snake_case</em></a>.</p>
 <table>
 <thead>
 <tr>
