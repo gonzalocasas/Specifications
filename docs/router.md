@@ -3,7 +3,7 @@ Router
 
 ## Role
 
-The router's role is straightforward; It has to transfer packet coming from an emitter to the
+The router's role is straightforward; It has to transfer packets coming from an emitter to the
 right recipient. The emitter and the recipient could be either:
 
 - A gateway and a broker
@@ -18,34 +18,37 @@ way. Let's distinguish communications the following way:
 Communications protocols used between, on the one hand, gateways and the router (uplink) and,
 on the other hand, the router and brokers (downlink) don't have to be identical. 
 
-Both communication process have their own characteristics and behavior, they will be detailed
+Both communication processes have their own characteristics and behavior, they will be detailed
 separately. 
 
 ### Uplink communication
 
 A given gateway will be connected to a router of its choice, meaning that the gateway is
-configured to interact with that precise router. A router nevertheless might received
-communication from several gateways. Thus, gateways are completely unknown from a router - and
-would remain unknown during the router lifecycle.
+configured to interact with that precise router (a gateway could be configured for several
+routers, but the idea is the same; they are not allowed dynamically and won't change as long as
+the configuration remains the same). Obviously, a router might received communications from
+several gateways as well. Thus, gateways are completely unknown from a router - and would
+remain unknown during the router lifecycle.
 
 A router is thereby a machine on which gateway will attempt to connect. This assumes that the
 router is accessible via a static IP address or solvable through a DNS service. The whole
-protocol used by gateways can be found [here][gateway_protocol] and could be sum up the
-following ways:
+protocol used by gateways can be found [here][gateway_protocol] and could be sum up as follow:
 
 - Gateways initiate communication with a router
 - Gateways send data using a json structure and containing one or several packets
 - The router acknowledge reception of data
 - Gateways could be protected by a firewall or could use a NAT, routers cannot initiate communications
 - Gateways might trigger and pull the router periodically to keep a connexion open
+- The communication is closed after a delay (after the second receive window, cf. downlink
+  communication)
 
 ### Downlink communication
 
-As for the first version, the network will only supports devices of class A, the connexion
+Because of the first version, the network will only supports devices of class A, the connexion
 between a gateway and a router would stay opened for a maximum of 2 seconds. The whole process
 is detailed in the [LoRaWAN specifications 1.0][lorawan] - section 3.3 Receive Windows. In few
 words though, after having emitted messages, a class A node will open two short receive windows
-and allow incoming messages from a gateway. Windows are opened exactly one and two seconds
+and will allow incoming messages from a gateway. Windows are opened exactly one and two seconds
 after the packet's emission. Sending packet at the right time is part of the gateway
 responsibility, however, scheduling the emission is part of the network's one. 
 
@@ -72,7 +75,7 @@ In order to communicate with the outside world, we'll split the router in three 
 - An uplink adapter
 - A downlink adapter
 
-The idea is to avoid to tighly couple the router core features with the way it is
+The idea is to avoid to tightly couple the router core features with the way it is
 communicating. By doing such a separation of concerns, we allow the router to evolve and change
 its communication protocol at any moment, without any impact on the core mechanisms. Thus, as
 long as the adapters remain compliant to a given interface they can be switched on demand. 
@@ -97,7 +100,6 @@ Packets are `json` structure with the following structure:
     "codr": <String>,
     "rssi": <Number>,
     "lsnr": <Number>,
-    "lsnr": <Number>,
     "size": <Number>,
     "data": <String>
 }
@@ -121,8 +123,8 @@ forward :: UpAdapter, Packet -> Unit
 forward (adapter, packet)
 ```
 
-The uplink adapter is thereby in charge of queuing incoming packet, and trigger the router to
-handle them properly. Because data coming from a gateway aren' formatted in the right way and
+The uplink adapter is thereby in charge of queuing incoming packets, and trigger the router to
+handle them properly. Because data coming from a gateway aren't formatted in the right way and
 also because a gateway might send several packets through the same message, it is under the
 uplink adapter responsability to decode and interpret the data accordingly. 
 
@@ -151,7 +153,7 @@ have been discovered.
 
 The core router (hereby known as `Router`) handle all the router logic. It also supplies a
 concise interface to allow both adapters to trigger actions. Any error or success from both
-adapters might trigger one of the following method.
+adapters could trigger one of the following method.
 
 ``` haskell
 -- Ask the router to handle a specific error. 
@@ -177,7 +179,7 @@ enough to allow the router to recover from it.
 
 ## Errors
 
-Any error coming from any router's components should supply the following information:
+Any error coming from any router's components should provide the following information:
 
 - a name / identifier 
 - a date (the moment it happens)
@@ -205,8 +207,8 @@ params (err)
 ```
 
 Errors types the router may encounter are listed right below. This list isn't settled and is
-likely to evolve and change during the development. However, it gives an overview of referenced
-errors. By convention, all error names are written in [*snake_case*][snakecase].
+likely to grow during the development. However, it gives an overview of referenced errors. By
+convention, all error names are written in [*snake_case*][snakecase].
 
 name                   | description
 -----------------------|-------------
