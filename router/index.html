@@ -161,7 +161,9 @@ protocol used by gateways can be found <a href="https://github.com/TheThingsNetw
 <li>Gateways send data using a json structure and containing one or several packets</li>
 <li>The router acknowledge reception of data</li>
 <li>Gateways could be protected by a firewall or could use a NAT, routers cannot initiate communications</li>
-<li>Gateways might trigger and pull the router periodically to keep a connexion open</li>
+<li>Gateways might trigger and pull the router periodically to keep a connexion open (this is
+  fairly an implementation detail, but the gateway protocol we are refering to is describing an
+  implementation. We'll see how we handle this in the next section)</li>
 <li>The communication is closed after a delay (after the second receive window, cf. downlink
   communication)</li>
 </ul>
