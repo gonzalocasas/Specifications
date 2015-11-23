@@ -129,6 +129,112 @@
             <div class="col-md-9" role="main">
 
 <h1 id="router">Router</h1>
+<table>
+<thead>
+<tr>
+<th>R</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-1</td>
+<td>Forward uplink messages to brokers</td>
+</tr>
+<tr>
+<td>R-2</td>
+<td>Forward downlink messages to gateways</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>R-1</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-1.1</td>
+<td>Listen and receive incoming uplink transmissions</td>
+</tr>
+<tr>
+<td>R-1.2</td>
+<td>Decode an incoming transmission</td>
+</tr>
+<tr>
+<td>R-1.3</td>
+<td>Lookup a device address</td>
+</tr>
+<tr>
+<td>R-1.4</td>
+<td>Forward a packet to broker(s)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>R-1.3</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-1.3.1</td>
+<td>Lookup local storage addresses</td>
+</tr>
+<tr>
+<td>R-1.3.2</td>
+<td>Invalidate expired entries</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>R-1.4</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-1.4.1</td>
+<td>Send a packet to known brokers</td>
+</tr>
+<tr>
+<td>R-1.4.2</td>
+<td>Broadcast a packet to all brokers</td>
+</tr>
+<tr>
+<td>R-1.4.3</td>
+<td>Store device address and associated broker(s)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>R-2</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-2.1</td>
+<td>Listen and receive incoming downlink transmissions</td>
+</tr>
+<tr>
+<td>R-2.2</td>
+<td>Determine recipient gateway(s)</td>
+</tr>
+<tr>
+<td>R-2.3</td>
+<td>Forward a packet to gateway(s)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="role">Role</h2>
 <p>The router's role is straightforward; It has to transfer packets coming from an emitter to the
 right recipient. The emitter and the recipient could be either:</p>
@@ -167,6 +273,14 @@ protocol used by gateways can be found <a href="https://github.com/TheThingsNetw
 <li>The communication is closed after a delay (after the second receive window, cf. downlink
   communication)</li>
 </ul>
+<p>Once a communication is established with a gateway and a packet received, the router has to
+determine to which broker should the packet be forwarded. Two options exist:</p>
+<ul>
+<li>The address is known and associated to a broker</li>
+<li>The address is unknown</li>
+</ul>
+<p>The former option will lead to a direct forwarding whereas the latter will require a network
+discovering / broadcasting (see the section <em>Address resolution and caching</em>).</p>
 <h3 id="downlink-communication">Downlink communication</h3>
 <p>Because of the first version, the network will only supports devices of class A, the connexion
 between a gateway and a router would stay opened for a maximum of 2 seconds. The whole process
@@ -186,6 +300,24 @@ through the first window will cause the second one to never be opened. </p>
 <p>Having said that, a downlink communication could be initiated by either an Application or a
 Network Server in response of an uplink message from a device. The role of a router is to
 forward those messages, not to trigger or schedule them.</p>
+<h3 id="address-resolution-and-caching">Address resolution and caching</h3>
+<p>A router has a configured list of brokers addresses as well as a local cache associating device
+adresses to brokers. Entries of the cache get invalidated at regular interval (to determine
+during testing or by computing), meaning that they are removed from the cache.<br />
+When receiving a message, the router is in charge of looking into its local cache to determine
+wether or not a broker is known for the related node and segment. This is done by broadcasting a
+message to each known broker and by listening to their answers for the given message. </p>
+<p>The router then stores each broker able to handle messages coming from the given node. However,
+because:</p>
+<ul>
+<li>Handlers may register after a node emits a signal to brokers</li>
+<li>A broker might not be available at the moment the broadcasting is done</li>
+<li>Two node addresses are in collision</li>
+</ul>
+<p>The cache has to be invalidated to allow the network to recover a consistent state. Such that
+no mapping between an address and a broker is settled forever after a first broadcast. However,
+when an address is known and is not invalidated, any issue listed above will remain until the
+next invalidation. </p>
 <h2 id="decoupling">Decoupling</h2>
 <p>In order to communicate with the outside world, we'll split the router in three parts: </p>
 <ul>
