@@ -53,10 +53,12 @@ A broker receives transmissions from routers. Transmissions have two aspects:
 - Discovering message
 - Direct message
 
-
+Discovering messages are sent when a router is trying to identify 
 
 ### Downlink communication
 
 ### Network Commands
+
+
 
 [lorawan]: https://www.lora-alliance.org/portals/0/specs/LoRaWAN%20Specification%201R0.pdf
