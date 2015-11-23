@@ -126,7 +126,14 @@ making sure that packets are correct and handling communications between other c
 each broker is associated a given network server with which it is working closely. We can see
 the network server as external ressources of computing and storage to which a broker could
 refer at any time. </p>
-<p>Therefore, a broker is in charge of a given node. </p>
+<p>Therefore, a broker is in charge of a set of nodes. This is a 1-to-1 relation meaning that a
+node is controlled by a unique broker. There is for the moment no duplication or sharing
+possible. A broker does not have access to network servers different from the one it has been
+dedicated to. A node isn't shared and all packets coming from a given node end to the same
+given broker.</p>
+<p>For each node it is in charge of, the broker hold a network session key associated to the node.
+It is thereby able to check the integrity of the packet by doing a <code>MIC check</code>. The process is
+detailed in the <a href="https://www.lora-alliance.org/portals/0/specs/LoRaWAN%20Specification%201R0.pdf">LoRaWAN specifications</a> - section 4.4 Message Integrity Code (MIC).</p>
 <h3 id="uplink-communications">Uplink communications</h3>
 <p>Also, a broker receive transmissions from routers. Transmissions have two aspects:</p>
 <ul>
