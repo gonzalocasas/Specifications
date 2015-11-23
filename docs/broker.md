@@ -22,21 +22,38 @@ toward a broker. After dealing with the communication, the broker may reply to t
 will forget about its existence after that. Brokers are known from routers, like routers are
 known from gateways. 
 
-//TODO handlers
+On the other hand, brokers communicate with a bunch of handlers that have registered themselves
+beforehand. This way, when a device joins the network every broker has to communicate with its
+own handlers list to determine wether or not it has to handle packets incoming from that
+device. The previous assertion assumes that a given handler isn't registered to several
+different brokers. 
 
-For each node it is in charge of, the broker hold a network session key associated to the node.
+Relations are schematically represented in the next diagram. 
+
+-------------------
+![Broker's relations](img/broker_relations.svg)
+<p align="center">*Broker's relations*</p>
+-------------------
+
+For each node it is in charge of, the broker holds a network session key associated to the node.
 It is thereby able to check the integrity of the packet by doing a `MIC check`. The process is
 detailed in the [LoRaWAN specifications][lorawan] - section 4.4 Message Integrity Code (MIC). 
 
 Depending of the packet's nature, the broker might communicate with either its network server
-or a registered handler.
+or a registered handler. Part of the packet's message contains a *MAC header* `MHDR` which is not
+encrypted and gives details about the nature of packet's nature (cf the [payload
+cheatsheet](/img/cheatsheet.svg)). Thus, for any command (`FPort` set to `0`) the broker would
+forward the action to its network server. Otherwise, the packet is forwarded to the right
+handler. 
 
 ### Uplink communications
 
-Also, a broker receive transmissions from routers. Transmissions have two aspects:
+A broker receives transmissions from routers. Transmissions have two aspects:
 
 - Discovering message
 - Direct message
+
+
 
 ### Downlink communication
 
