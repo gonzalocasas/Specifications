@@ -113,7 +113,15 @@
         
             <li><a href="#role">Role</a></li>
         
-            <li><a href="#router-decoupling">Router decoupling</a></li>
+            <li><a href="#decoupling">Decoupling</a></li>
+        
+            <li><a href="#uplink-adapter">Uplink adapter</a></li>
+        
+            <li><a href="#downlink-adapter">Downlink adapter</a></li>
+        
+            <li><a href="#core">Core</a></li>
+        
+            <li><a href="#errors">Errors</a></li>
         
     
     </ul>
@@ -173,7 +181,7 @@ through the first window will cause the second one to never be opened. </p>
 <p>Having said that, a downlink communication could be initiated by either an Application or a
 Network Server in response of an uplink message from a device. The role of a router is to
 forward those messages, not to trigger or schedule them.</p>
-<h2 id="router-decoupling">Router decoupling</h2>
+<h2 id="decoupling">Decoupling</h2>
 <p>In order to communicate with the outside world, we'll split the router in three parts: </p>
 <ul>
 <li>The core router</li>
@@ -209,7 +217,7 @@ to communicate. </p>
 
 <p>More information about the meaning of those fields could be found in the <a href="https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT">semtech protocol
 description</a>.</p>
-<h3 id="uplink-adapter">Uplink adapter</h3>
+<h2 id="uplink-adapter">Uplink adapter</h2>
 <p>We consider the following methods for the Uplink adapter (hereby known as <code>UpAdapter</code>):</p>
 <pre><code class="haskell">-- Notify the gateway that the given packet has been received
 ack :: UpAdapter, Packet -&gt; Unit
@@ -224,7 +232,7 @@ forward (adapter, packet)
 handle them properly. Because data coming from a gateway aren' formatted in the right way and
 also because a gateway might send several packets through the same message, it is under the
 uplink adapter responsability to decode and interpret the data accordingly. </p>
-<h3 id="downlink-adapter">Downlink adapter</h3>
+<h2 id="downlink-adapter">Downlink adapter</h2>
 <p>We consider the following methods for the Downlink adapter (hereby known as <code>DownAdapter</code>):</p>
 <pre><code class="haskell">-- Send a packet to every available brokers. This method should trigger 
 -- back some calls on the router to inform the router about which Broker 
@@ -241,13 +249,13 @@ forward (adapter, [broAddr1, broAddr2], packet)
 Basically, this will be done when there is no known broker for a given packet. The downlink
 adapter is thereby in charge of registering device addresses to the core router once brokers
 have been discovered. </p>
-<h3 id="core-router">Core router</h3>
+<h2 id="core">Core</h2>
 <p>The core router (hereby known as <code>Router</code>) handle all the router logic. It also supplies a
-concise interface to allow both adapter to trigger actions. Any error or success from both
-adapter might trigger one of the following method.</p>
+concise interface to allow both adapters to trigger actions. Any error or success from both
+adapters might trigger one of the following method.</p>
 <pre><code class="haskell">-- Ask the router to handle a specific error. 
 handleError :: Router, Error -&gt; Unit
-handleError (router, e)
+handleError (router, err)
 
 -- Handle an incoming uplink packet
 handleUplink :: Router, Packet -&gt; Unit
@@ -262,9 +270,68 @@ registerDevice :: Router, DeviceAddr, BrokerAddr[] -&gt; Unit
 registerDevice (router, devAddr, [broAddr1, broAddr2])
 </code></pre>
 
-<p>The <code>handleError</code> method gives adapter a way to notify the router of an unresolved transaction
+<p>The <code>handleError</code> method gives adapters a way to notify the router of an unresolved transaction
 or an incorrect behavior from the network. Errors are detailed below and should be explicit
-enough to allow the router to recover from it. </p></div>
+enough to allow the router to recover from it. </p>
+<h2 id="errors">Errors</h2>
+<p>Any error coming from any router's components should supply the following information:</p>
+<ul>
+<li>a name / identifier </li>
+<li>a date (the moment it happens)</li>
+<li>a message / description</li>
+<li>the packet or data manipulated if any</li>
+</ul>
+<p>A given error will thus provide methods that reflect those attributes:</p>
+<pre><code class="haskell">-- Retrieve the error's name
+name :: Error -&gt; String
+name (err)
+
+-- Retrieve the error's creation date
+date :: Error -&gt; Date|String
+date (err) 
+
+-- Retrieve the error's message
+message :: Error -&gt; String
+message (err)
+
+-- Retrieve the error's data
+params :: Error -&gt; a
+params (err)
+</code></pre>
+
+<p>Errors types the router may encounter are listed right below. This list isn't settled and is
+likely to evolve and change during the development. However, it gives an overview of referenced
+errors. By convention, all error names are written in <a href="https://en.wikipedia.org/wiki/Snake_case"><em>snake_case</em></a>.</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>invalid_packet</td>
+<td>The given packet has a bad format</td>
+</tr>
+<tr>
+<td>connection_lost</td>
+<td>The connection with a recipient has been lost</td>
+</tr>
+<tr>
+<td>no_response</td>
+<td>No response received from a recipient</td>
+</tr>
+<tr>
+<td>unable_forward_up</td>
+<td>Unable to forward a packet (uplink)</td>
+</tr>
+<tr>
+<td>unable_forward_down</td>
+<td>Unable to forward a packet (downlink)</td>
+</tr>
+</tbody>
+</table></div>
         </div>
 
         <footer class="col-md-12">
