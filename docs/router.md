@@ -64,7 +64,7 @@ Having said that, a downlink communication could be initiated by either an Appli
 Network Server in response of an uplink message from a device. The role of a router is to
 forward those messages, not to trigger or schedule them.
 
-## Router decoupling
+## Decoupling
 
 In order to communicate with the outside world, we'll split the router in three parts: 
 
@@ -107,7 +107,7 @@ More information about the meaning of those fields could be found in the [semtec
 description][gateway_protocol].
 
 
-### Uplink adapter
+## Uplink adapter
 
 We consider the following methods for the Uplink adapter (hereby known as `UpAdapter`):
 
@@ -126,7 +126,7 @@ handle them properly. Because data coming from a gateway aren' formatted in the 
 also because a gateway might send several packets through the same message, it is under the
 uplink adapter responsability to decode and interpret the data accordingly. 
 
-### Downlink adapter
+## Downlink adapter
 
 We consider the following methods for the Downlink adapter (hereby known as `DownAdapter`):
 
@@ -147,16 +147,16 @@ Basically, this will be done when there is no known broker for a given packet. T
 adapter is thereby in charge of registering device addresses to the core router once brokers
 have been discovered. 
 
-### Core router
+## Core
 
 The core router (hereby known as `Router`) handle all the router logic. It also supplies a
-concise interface to allow both adapter to trigger actions. Any error or success from both
-adapter might trigger one of the following method.
+concise interface to allow both adapters to trigger actions. Any error or success from both
+adapters might trigger one of the following method.
 
 ``` haskell
 -- Ask the router to handle a specific error. 
 handleError :: Router, Error -> Unit
-handleError (router, e)
+handleError (router, err)
 
 -- Handle an incoming uplink packet
 handleUplink :: Router, Packet -> Unit
@@ -171,12 +171,53 @@ registerDevice :: Router, DeviceAddr, BrokerAddr[] -> Unit
 registerDevice (router, devAddr, [broAddr1, broAddr2])
 ```
 
-The `handleError` method gives adapter a way to notify the router of an unresolved transaction
+The `handleError` method gives adapters a way to notify the router of an unresolved transaction
 or an incorrect behavior from the network. Errors are detailed below and should be explicit
 enough to allow the router to recover from it. 
 
+## Errors
+
+Any error coming from any router's components should supply the following information:
+
+- a name / identifier 
+- a date (the moment it happens)
+- a message / description
+- the packet or data manipulated if any
+
+A given error will thus provide methods that reflect those attributes:
+
+```haskell
+-- Retrieve the error's name
+name :: Error -> String
+name (err)
+
+-- Retrieve the error's creation date
+date :: Error -> Date|String
+date (err) 
+
+-- Retrieve the error's message
+message :: Error -> String
+message (err)
+
+-- Retrieve the error's data
+params :: Error -> a
+params (err)
+```
+
+Errors types the router may encounter are listed right below. This list isn't settled and is
+likely to evolve and change during the development. However, it gives an overview of referenced
+errors. By convention, all error names are written in [*snake_case*][snakecase].
+
+name                   | description
+-----------------------|-------------
+invalid\_packet        | The given packet has a bad format
+connection\_lost       | The connection with a recipient has been lost 
+no\_response           | No response received from a recipient
+unable\_forward\_up    | Unable to forward a packet (uplink)
+unable\_forward\_down  | Unable to forward a packet (downlink)
+
 [gateway_protocol]: https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT
 [lorawan]: https://www.lora-alliance.org/portals/0/specs/LoRaWAN%20Specification%201R0.pdf
-
+[snakecase]: https://en.wikipedia.org/wiki/Snake_case
 
 
