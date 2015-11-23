@@ -131,13 +131,7 @@
         
             <li><a href="#role">Role</a></li>
         
-            <li><a href="#decoupling">Decoupling</a></li>
-        
-            <li><a href="#uplink-adapter">Uplink adapter</a></li>
-        
-            <li><a href="#downlink-adapter">Downlink adapter</a></li>
-        
-            <li><a href="#core">Core</a></li>
+            <li><a href="#interfaces">Interfaces</a></li>
         
             <li><a href="#errors">Errors</a></li>
         
@@ -336,7 +330,7 @@ because:</p>
 no mapping between an address and a broker is settled forever after a first broadcast. However,
 when an address is known and is not invalidated, any issue listed above will remain until the
 next invalidation. </p>
-<h2 id="decoupling">Decoupling</h2>
+<h2 id="interfaces">Interfaces</h2>
 <p>In order to communicate with the outside world, we'll split the router in three parts: </p>
 <ul>
 <li>The core router</li>
@@ -371,7 +365,7 @@ to communicate. </p>
 
 <p>More information about the meaning of those fields could be found in the <a href="https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT">semtech protocol
 description</a>.</p>
-<h2 id="uplink-adapter">Uplink adapter</h2>
+<h3 id="uplink-adapter">Uplink adapter</h3>
 <p>We consider the following methods for the Uplink adapter (hereby known as <code>UpAdapter</code>):</p>
 <pre><code class="haskell">-- Notify the gateway that the given packet has been received
 ack :: UpAdapter, Packet -&gt; Unit
@@ -386,7 +380,7 @@ forward (adapter, packet)
 handle them properly. Because data coming from a gateway aren't formatted in the right way and
 also because a gateway might send several packets through the same message, it is under the
 uplink adapter responsability to decode and interpret the data accordingly. </p>
-<h2 id="downlink-adapter">Downlink adapter</h2>
+<h3 id="downlink-adapter">Downlink adapter</h3>
 <p>We consider the following methods for the Downlink adapter (hereby known as <code>DownAdapter</code>):</p>
 <pre><code class="haskell">-- Send a packet to every available brokers. This method should trigger 
 -- back some calls on the router to inform the router about which Broker 
@@ -403,7 +397,7 @@ forward (adapter, [broAddr1, broAddr2], packet)
 Basically, this will be done when there is no known broker for a given packet. The downlink
 adapter is thereby in charge of registering device addresses to the core router once brokers
 have been discovered. </p>
-<h2 id="core">Core</h2>
+<h3 id="core">Core</h3>
 <p>The core router (hereby known as <code>Router</code>) handle all the router logic. It also supplies a
 concise interface to allow both adapters to trigger actions. Any error or success from both
 adapters could trigger one of the following method.</p>
