@@ -127,7 +127,7 @@ no mapping between an address and a broker is settled forever after a first broa
 when an address is known and is not invalidated, any issue listed above will remain until the
 next invalidation. 
 
-## Decoupling
+## Interfaces 
 
 In order to communicate with the outside world, we'll split the router in three parts: 
 
@@ -169,7 +169,7 @@ More information about the meaning of those fields could be found in the [semtec
 description][gateway_protocol].
 
 
-## Uplink adapter
+### Uplink adapter
 
 We consider the following methods for the Uplink adapter (hereby known as `UpAdapter`):
 
@@ -188,7 +188,7 @@ handle them properly. Because data coming from a gateway aren't formatted in the
 also because a gateway might send several packets through the same message, it is under the
 uplink adapter responsability to decode and interpret the data accordingly. 
 
-## Downlink adapter
+### Downlink adapter
 
 We consider the following methods for the Downlink adapter (hereby known as `DownAdapter`):
 
@@ -209,7 +209,7 @@ Basically, this will be done when there is no known broker for a given packet. T
 adapter is thereby in charge of registering device addresses to the core router once brokers
 have been discovered. 
 
-## Core
+### Core
 
 The core router (hereby known as `Router`) handle all the router logic. It also supplies a
 concise interface to allow both adapters to trigger actions. Any error or success from both
