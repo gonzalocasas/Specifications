@@ -176,11 +176,9 @@ We consider the following methods for the Uplink adapter (hereby known as `UpAda
 ```haskell
 -- Notify the gateway that the given packet has been received
 ack :: UpAdapter, Packet -> Unit
-ack (adapter, packet)
 
 -- Send a downlink packet to a gateway
 forward :: UpAdapter, Packet -> Unit
-forward (adapter, packet)
 ```
 
 The uplink adapter is thereby in charge of queuing incoming packets, and trigger the router to
@@ -197,11 +195,9 @@ We consider the following methods for the Downlink adapter (hereby known as `Dow
 -- back some calls on the router to inform the router about which Broker 
 -- are indeed responsible for the Packet.
 broadcast :: DownAdapter, Packet -> Unit
-broadcast (adapter, packet)
 
 -- Forward an uplink packet to a list of brokers using their addresses
 forward :: DownAdapter, BrokerAddr[], Packet -> Unit
-forward (adapter, [broAddr1, broAddr2], packet)
 ```
 
 The downlink adapter should implement mechanism to handle network discovering (`broadcast`).
@@ -218,24 +214,24 @@ adapters could trigger one of the following method.
 ``` haskell
 -- Ask the router to handle a specific error. 
 handleError :: Router, Error -> Unit
-handleError (router, err)
 
 -- Handle an incoming uplink packet
 handleUplink :: Router, Packet -> Unit
-handleUplink (router, packet)
 
 -- Handle an incoming downlink packet
 handleDownlink :: Router, Packet -> Unit
-handleDownlink (router, packet)
 
 -- Register a bunch of brokers address for a given device
 registerDevice :: Router, DeviceAddr, BrokerAddr[] -> Unit
-registerDevice (router, devAddr, [broAddr1, broAddr2])
 ```
 
 The `handleError` method gives adapters a way to notify the router of an unresolved transaction
 or an incorrect behavior from the network. Errors are detailed below and should be explicit
 enough to allow the router to recover from it. 
+
+## Flow Chart
+
+//TODO
 
 ## Errors
 
@@ -251,19 +247,15 @@ A given error will thus provide methods that reflect those attributes:
 ```haskell
 -- Retrieve the error's name
 name :: Error -> String
-name (err)
 
 -- Retrieve the error's creation date
 date :: Error -> Date|String
-date (err) 
 
 -- Retrieve the error's message
 message :: Error -> String
-message (err)
 
 -- Retrieve the error's data
 params :: Error -> a
-params (err)
 ```
 
 Errors types the router may encounter are listed right below. This list isn't settled and is
