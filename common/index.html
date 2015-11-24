@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>Handler - The Things Network</title>
+	<title>Common - The Things Network</title>
 
         <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -55,8 +55,8 @@
             
             
             
-                <li >
-                    <a href="../common/">Common</a>
+                <li class="active">
+                    <a href="./">Common</a>
                 </li>
             
             
@@ -79,8 +79,8 @@
             
             
             
-                <li class="active">
-                    <a href="./">Handler</a>
+                <li >
+                    <a href="../handler/">Handler</a>
                 </li>
             
             
@@ -89,12 +89,12 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="../networkserver/">
+                    <a rel="next" href="..">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
-                <li class="disabled">
-                    <a rel="prev" >
+                <li >
+                    <a rel="prev" href="../router/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -127,11 +127,67 @@
 
     <ul class="nav bs-sidenav">
     
+        <li class="main active"><a href="#common">Common</a></li>
+        
+            <li><a href="#packet-representation">Packet representation</a></li>
+        
+            <li><a href="#mac-command">MAC Command</a></li>
+        
+            <li><a href="#errors">Errors</a></li>
+        
+    
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-</div>
+<h1 id="common">Common</h1>
+<h2 id="packet-representation">Packet representation</h2>
+<p>As long as all components use compatible representation of a packet, they sould be able to
+communicate. Therefore, when refering to a <code>Packet</code>, we're seemingly refering a <code>json-like</code>
+structure of the following shape:</p>
+<pre><code class="json">{
+    &quot;time&quot;: &lt;String&gt;,
+    &quot;tmst&quot;: &lt;Number&gt;,
+    &quot;freq&quot;: &lt;Number&gt;,
+    &quot;chan&quot;: &lt;Number&gt;,
+    &quot;rfch&quot;: &lt;Number&gt;,
+    &quot;stat&quot;: &lt;Number&gt;,
+    &quot;modu&quot;: &lt;String&gt;,
+    &quot;datr&quot;: &lt;Number&gt;, // In case of GFSK modulation
+    &quot;datr&quot;: &lt;String&gt;, // In case of LoRa modulation
+    &quot;codr&quot;: &lt;String&gt;,
+    &quot;rssi&quot;: &lt;Number&gt;,
+    &quot;lsnr&quot;: &lt;Number&gt;,
+    &quot;size&quot;: &lt;Number&gt;,
+    &quot;data&quot;: &lt;String&gt;
+}
+</code></pre>
+
+<p>More information about the meaning of those fields could be found in the <a href="https://github.com/TheThingsNetwork/packet_forwarder/blob/master/PROTOCOL.TXT">semtech protocol
+description</a>.</p>
+<h2 id="mac-command">MAC Command</h2>
+<p>//TODO</p>
+<h2 id="errors">Errors</h2>
+<p>Any error coming from any components should provide the following information:</p>
+<ul>
+<li>a name / identifier </li>
+<li>a date (the moment it happens)</li>
+<li>a message / description</li>
+<li>the packet or data manipulated if any</li>
+</ul>
+<p>A given error will thus provide methods that reflect those attributes:</p>
+<pre><code class="haskell">-- Retrieve the error's name
+name :: Error -&gt; String
+
+-- Retrieve the error's creation date
+date :: Error -&gt; Date|String
+
+-- Retrieve the error's message
+message :: Error -&gt; String
+
+-- Retrieve the error's data
+params :: Error -&gt; a
+</code></pre></div>
         </div>
 
         

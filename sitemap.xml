@@ -4,7 +4,15 @@
     
     <url>
      <loc>None/</loc>
-     <lastmod>2015-11-23</lastmod>
+     <lastmod>2015-11-24</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+    
+    <url>
+     <loc>None/common/</loc>
+     <lastmod>2015-11-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -12,7 +20,7 @@
     
     <url>
      <loc>None/router/</loc>
-     <lastmod>2015-11-23</lastmod>
+     <lastmod>2015-11-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -20,7 +28,7 @@
     
     <url>
      <loc>None/broker/</loc>
-     <lastmod>2015-11-23</lastmod>
+     <lastmod>2015-11-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -28,7 +36,7 @@
     
     <url>
      <loc>None/networkserver/</loc>
-     <lastmod>2015-11-23</lastmod>
+     <lastmod>2015-11-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
@@ -36,15 +44,7 @@
     
     <url>
      <loc>None/handler/</loc>
-     <lastmod>2015-11-23</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
-     <loc>None/development/</loc>
-     <lastmod>2015-11-23</lastmod>
+     <lastmod>2015-11-24</lastmod>
      <changefreq>daily</changefreq>
     </url>
     
