@@ -140,35 +140,6 @@ communicating. By doing such a separation of concerns, we allow the router to ev
 its communication protocol at any moment, without any impact on the core mechanisms. Thus, as
 long as the adapters remain compliant to a given interface they can be switched on demand. 
 
-All three components will share a common representation of a packet tagged with a version
-number. As long as all component use compatible representation of a packet, they sould be able
-to communicate. 
-
-Packets are `json` structure with the following structure:
-
-```json
-{
-    "time": <String>,
-    "tmst": <Number>,
-    "freq": <Number>,
-    "chan": <Number>,
-    "rfch": <Number>,
-    "stat": <Number>,
-    "modu": <String>,
-    "datr": <Number>, // In case of GFSK modulation
-    "datr": <String>, // In case of LoRa modulation
-    "codr": <String>,
-    "rssi": <Number>,
-    "lsnr": <Number>,
-    "size": <Number>,
-    "data": <String>
-}
-```
-
-More information about the meaning of those fields could be found in the [semtech protocol
-description][gateway_protocol].
-
-
 ### Uplink adapter
 
 We consider the following methods for the Uplink adapter (hereby known as `UpAdapter`):
@@ -234,29 +205,6 @@ enough to allow the router to recover from it.
 //TODO
 
 ## Errors
-
-Any error coming from any router's components should provide the following information:
-
-- a name / identifier 
-- a date (the moment it happens)
-- a message / description
-- the packet or data manipulated if any
-
-A given error will thus provide methods that reflect those attributes:
-
-```haskell
--- Retrieve the error's name
-name :: Error -> String
-
--- Retrieve the error's creation date
-date :: Error -> Date|String
-
--- Retrieve the error's message
-message :: Error -> String
-
--- Retrieve the error's data
-params :: Error -> a
-```
 
 Errors types the router may encounter are listed right below. This list isn't settled and is
 likely to grow during the development. However, it gives an overview of referenced errors. By
