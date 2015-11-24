@@ -3,11 +3,11 @@ theme_dir: 'theme'
 
 pages:
     - Overview: 'index.md'
+    - Common: 'common.md'
     - Router: 'router.md'
     - Broker: 'broker.md'
     - Network Server: 'networkserver.md'
     - Handler: 'handler.md'
-    - Development: 'development.md'
 
 extra:
     disqus: 'thethingsnetwork'
