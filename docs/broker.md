@@ -48,46 +48,118 @@ handler.
 
 ### Uplink transmissions
 
-A broker receives transmissions from routers. Transmissions have two aspects:
 
-- Discovering message
-- Direct message
+The broker is waiting for router to forward packets coming from nodes. When receiving a packet,
+the broker should firstly check wether or not it should take care of the packet. This is done
+by looking into a local storage of node addresses. This is list of addresses is created
+dynamically during the broker's lifecycle as long as handlers register to the broker. 
+Then, because collisions may happen between node adresses, the broker also has to perform a
+`MIC check` to ensure both the validity and its responsability for the given packet. 
 
-Discovering messages are sent when a router is trying to identify which brokers are in charge
-of a node. The structure and the content of both discovering and direct messages are identical,
-only the intent is different.  The direct message is addressed to a broker which is known
-responsible for the packet. In both cases nevertheless, the broker will handle the packet in
-same way, but the answer given to the router will differ. 
+An unknown address or a invalid `MIC check` should lead to an error transmitted to the router
+emitter. Errors are detailed in a next section. If everything went well, the broker has to
+decode the packet `MAC header - MHDR` and determine wether the packet carry a command or data.
+The broker's behavior is thereby slightly different regarding to the packet's content. 
 
-The broker has to perform a `MIC check` on the packet with a double goal:
+**Packet with commands**
 
-- To ensure the packet is correct and valid
-- To prevent from collided packet sent by mistake
+For any received command, the broker will forward the packet to the network server able to deal
+with the command. A command is completely invisible to the application (and thus, handlers). By
+the by, when forwarding a command to a network server, the broker might wait for an answer
+until a timeout delay is reached (after the second receive window is missed for instance).
 
-Thus, because the node address is likely to collide with another node address, the broker might
-receive packets that are not under its control. Using the network session key known for the
-related node (one network session key per node), it can check wether or not it should handle
-the packet. Having a concordance with both the `MIC` and the `DevAddr` (double collision) has
-to be almost impossible and we'll consider that this is verified in practice (//TODO shall we
-compute chances ?).
+**Packet with data**
 
-### Packet with commands
+When the packet is carrying data towards an application, it should be forwarded to the right
+handler. In a similar way of what is done with commands, the broker will also wait for an
+answer to reply to the router. 
+In the meantime, a broker will notify its network server that a receive window for the given
+device is available. The network server should either reply by a command to send back, or deny
+the offer. 
 
-For any uplink messages, the broker will also have to notify its network server as an uplink
-messages means that receive windows will be available for the device. A network server could
-use one of those window to send a specific command to the node. 
+Once both the network server and the handler have replied, the broker has to merge the response
+into one single packet and send it back to the router (if necessary, it could happen that the
+request does not need any packet to be sent as answer).
 
-Incidentally, when the received message is carrying a command, the command has to be
-communicated to the network server as well. In most cases, no handler is reached and the
-packet is completely handled by the network itself; the communication is thereby invisible for
-the application. For some commands nevertheless (a `join request` for instance), 
+**Join request**
 
-### Packet with data
+A special edge-case requires an additional behavior. Join request might be sent from a device,
+in which case, the handler has to be contacted as a referee in order to authorize or reject the
+willing node. In case of success, the network server should be notified in order to setup and
+initialize the node managing in the future. 
 
-Also, in some cases, the application might want to use these receive windows to send back some
-data to the node. Data from the application and commands can be merged in a single packet.
-Waiting for the response of both entrants and doing a merge is under the broker
-responsibility. 
+## Interfaces
+
+In order to communicate with other components, a broker will be split in four parts:
+
+- The core broker
+- The router adapter
+- The handler adapter
+- The network server adapter
+
+The idea is to avoid to tightly couple the broker core features with the way it is
+communicating. By doing such a separation of concerns, we allo the broker to evolve and change
+its communication protocols at any moment without any impact on the core mechanisms. Thus, as
+long as the adapters remain compliant to a given interface, they can be switched on demand. 
+
+We previously identified the communication needs between the broker and other components.
+Incidentally, all adapters and the core broker are sharing a same packet structure. 
+
+### The router adapter
+
+We consider the following methods for the Router adapter (hereby known as `RoutAdapter`):
+
+```haskell
+-- Reject a packet previously received by the broker
+reject :: RoutAdapter, Packet -> Unit
+
+-- Send a packet as response to a router
+reply :: RoutAdapter, Packet -> Unit
+```
+
+### The handler adapter
+
+We consider the following methods for the Handler adapter (hereby known as `HandAdapter`):
+
+```haskell
+--  
+
+
+```
+
+### The network server adapter
+
+We consider the following methods for the Network Server adapter (hereby known as `NSAdapter`):
+
+```haskell
+-- Forward a command to the Network Server. 
+handleCommand :: NSAdapter, Packet -> Command
+```
+
+### The core broker
+
+We consider the following methods for the Core Broker (hereby kown as `Broker`): 
+
+```haskell
+-- Handle an error thrown by an adapter
+handleError :: Broker, Error -> Unit
+
+-- Handle an incoming packet from the router
+handleUplink :: Broker, Packet -> Unit
+
+-- Handle an incoming packet from the handler
+handleDownlink :: Broker, Packet -> Unit
+
+-- Receive and store a network session key associated to a device
+storeNwkSKey :: Broker, DevAdrr, String -> Unit
+```
+
+## Flow Chart
+
+//TODO
+
+
+
 
 
 
