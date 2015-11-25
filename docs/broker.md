@@ -30,7 +30,7 @@ device. The previous assertion assumes that a given handler isn't registered to 
 
 Relations are schematically represented in the next diagram. 
 
--------------------
+--------------------- 
 ![Broker's relations](img/broker_relations.svg)
 <p align="center">*Broker's relations*</p>
 -------------------
@@ -59,34 +59,44 @@ Then, because collisions may happen between node adresses, the broker also has t
 An unknown address or a invalid `MIC check` should lead to an error transmitted to the router
 emitter. Errors are detailed in a next section. If everything went well, the broker has to
 decode the packet `MAC header - MHDR` and determine wether the packet carry a command or data.
-The broker's behavior is thereby slightly different regarding to the packet's content. 
+The broker's behavior is thereby slightly different regarding to the packet's content. By the
+by, a packet may contain both a command and data, in such a case, it will be processed for both
+content. 
 
 **Packet with commands**
 
-For any received command, the broker will forward the packet to the network server able to deal
-with the command. A command is completely invisible to the application (and thus, handlers). By
-the by, when forwarding a command to a network server, the broker might wait for an answer
-until a timeout delay is reached (after the second receive window is missed for instance).
+> For any received command, the broker will forward the packet to the network server able to
+> deal with the command. A command is completely invisible to the application (and thus,
+> handlers). By the by, when forwarding a command to a network server, the broker might wait
+> for an answer until a timeout delay is reached (after the second receive window is missed for
+> instance).
 
 **Packet with data**
 
-When the packet is carrying data towards an application, it should be forwarded to the right
-handler. In a similar way of what is done with commands, the broker will also wait for an
-answer to reply to the router. 
-In the meantime, a broker will notify its network server that a receive window for the given
-device is available. The network server should either reply by a command to send back, or deny
-the offer. 
-
-Once both the network server and the handler have replied, the broker has to merge the response
-into one single packet and send it back to the router (if necessary, it could happen that the
-request does not need any packet to be sent as answer).
+> When the packet is carrying data towards an application, it should be forwarded to the right
+> handler. In a similar way of what is done with commands, the broker will also wait for an
+> answer to reply to the router.  In the meantime, a broker will notify its network server that
+> a receive window for the given device is available. The network server should either reply by
+> a command to send back, or deny the offer. 
 
 **Join request**
 
-A special edge-case requires an additional behavior. Join request might be sent from a device,
-in which case, the handler has to be contacted as a referee in order to authorize or reject the
-willing node. In case of success, the network server should be notified in order to setup and
-initialize the node managing in the future. 
+> A special edge-case requires an additional behavior. Join request might be sent from a
+> device, in which case, the handler has to be contacted as a referee in order to authorize or
+> reject the willing node. In case of success, the network server should be notified in order
+> to setup and initialize the node managing in the future. 
+
+
+--------------------- 
+![Broker dipatching](img/broker_dispatching.svg)
+<p align="center">*Broker dispatching*</p>
+-------------------
+
+### Downlink communication
+
+Once all required tenants have replied, the broker has to merge the response into one single
+packet and send it back to the router (if necessary, it could happen that the request does not
+need any packet to be sent as answer). 
 
 ## Interfaces
 
