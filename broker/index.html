@@ -217,31 +217,37 @@ initialize the node managing in the future. </p>
 <li>The network server adapter</li>
 </ul>
 <p>The idea is to avoid to tightly couple the broker core features with the way it is
-communicating. By doing such a separation of concerns, we allo the broker to evolve and change
+communicating. By doing such a separation of concerns, we allow the broker to evolve and change
 its communication protocols at any moment without any impact on the core mechanisms. Thus, as
 long as the adapters remain compliant to a given interface, they can be switched on demand. </p>
 <p>We previously identified the communication needs between the broker and other components.
-Incidentally, all adapters and the core broker are sharing a same packet structure. </p>
+Incidentally, all adapters and the core broker are sharing a same packet structure (see
+<a href="../common">Common</a> for more details).</p>
 <h3 id="the-router-adapter">The router adapter</h3>
 <p>We consider the following methods for the Router adapter (hereby known as <code>RoutAdapter</code>):</p>
 <pre><code class="haskell">-- Reject a packet previously received by the broker
 reject :: RoutAdapter, Packet -&gt; Unit
 
+-- Notify routers that the given packet has been received and is handled
+ack :: RoutAdapter, Packet -&gt; Unit 
+
 -- Send a packet as response to a router
-reply :: RoutAdapter, Packet -&gt; Unit
+forward :: RoutAdapter, Packet -&gt; Unit
 </code></pre>
 
 <h3 id="the-handler-adapter">The handler adapter</h3>
 <p>We consider the following methods for the Handler adapter (hereby known as <code>HandAdapter</code>):</p>
-<pre><code class="haskell">--  
+<pre><code class="haskell">--  Forward a join request to the handler
+join :: HandAdapter, HandAddr, Packet -&gt; Unit 
 
-
+-- Forward data to the handler
+forward :: HandAdapter, HandAddr, Packet -&gt; Unit
 </code></pre>
 
 <h3 id="the-network-server-adapter">The network server adapter</h3>
 <p>We consider the following methods for the Network Server adapter (hereby known as <code>NSAdapter</code>):</p>
 <pre><code class="haskell">-- Forward a command to the Network Server. 
-handleCommand :: NSAdapter, Packet -&gt; Command
+command :: NSAdapter, Packet -&gt; Command
 </code></pre>
 
 <h3 id="the-core-broker">The core broker</h3>
@@ -253,10 +259,14 @@ handleError :: Broker, Error -&gt; Unit
 handleUplink :: Broker, Packet -&gt; Unit
 
 -- Handle an incoming packet from the handler
-handleDownlink :: Broker, Packet -&gt; Unit
+handleData :: Broker, DevAddr, Data -&gt; Unit
+
+-- Handle an incoming command from the Network Server
+HandleCommand :: Broker, DevAddr, Command -&gt; Unit
 
 -- Receive and store a network session key associated to a device
-storeNwkSKey :: Broker, DevAdrr, String -&gt; Unit
+HandleNwkSKey :: Broker, DevAdrr, NwkSKey -&gt; Unit
+
 </code></pre>
 
 <h2 id="flow-chart">Flow Chart</h2>
