@@ -98,12 +98,13 @@ In order to communicate with other components, a broker will be split in four pa
 - The network server adapter
 
 The idea is to avoid to tightly couple the broker core features with the way it is
-communicating. By doing such a separation of concerns, we allo the broker to evolve and change
+communicating. By doing such a separation of concerns, we allow the broker to evolve and change
 its communication protocols at any moment without any impact on the core mechanisms. Thus, as
 long as the adapters remain compliant to a given interface, they can be switched on demand. 
 
 We previously identified the communication needs between the broker and other components.
-Incidentally, all adapters and the core broker are sharing a same packet structure. 
+Incidentally, all adapters and the core broker are sharing a same packet structure (see
+[Common](/common) for more details).
 
 ### The router adapter
 
@@ -113,8 +114,11 @@ We consider the following methods for the Router adapter (hereby known as `RoutA
 -- Reject a packet previously received by the broker
 reject :: RoutAdapter, Packet -> Unit
 
+-- Notify routers that the given packet has been received and is handled
+ack :: RoutAdapter, Packet -> Unit 
+
 -- Send a packet as response to a router
-reply :: RoutAdapter, Packet -> Unit
+forward :: RoutAdapter, Packet -> Unit
 ```
 
 ### The handler adapter
@@ -122,9 +126,11 @@ reply :: RoutAdapter, Packet -> Unit
 We consider the following methods for the Handler adapter (hereby known as `HandAdapter`):
 
 ```haskell
---  
+--  Forward a join request to the handler
+join :: HandAdapter, HandAddr, Packet -> Unit 
 
-
+-- Forward data to the handler
+forward :: HandAdapter, HandAddr, Packet -> Unit
 ```
 
 ### The network server adapter
@@ -133,7 +139,7 @@ We consider the following methods for the Network Server adapter (hereby known a
 
 ```haskell
 -- Forward a command to the Network Server. 
-handleCommand :: NSAdapter, Packet -> Command
+command :: NSAdapter, Packet -> Command
 ```
 
 ### The core broker
@@ -148,10 +154,14 @@ handleError :: Broker, Error -> Unit
 handleUplink :: Broker, Packet -> Unit
 
 -- Handle an incoming packet from the handler
-handleDownlink :: Broker, Packet -> Unit
+handleData :: Broker, DevAddr, Data -> Unit
+
+-- Handle an incoming command from the Network Server
+HandleCommand :: Broker, DevAddr, Command -> Unit
 
 -- Receive and store a network session key associated to a device
-storeNwkSKey :: Broker, DevAdrr, String -> Unit
+HandleNwkSKey :: Broker, DevAdrr, NwkSKey -> Unit
+
 ```
 
 ## Flow Chart
