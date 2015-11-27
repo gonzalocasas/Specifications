@@ -13,8 +13,7 @@ refer at any time.
 Therefore, a broker is in charge of a set of nodes. This is a 1-to-1 relation meaning that a
 node is controlled by a unique broker. There is for the moment no duplication or sharing
 possible. A broker does not have access to network servers different from the one it has been
-assigned. A node isn't shared and all packets coming from a given node end to the same
-given broker.
+assigned. A node isn't shared and all packets coming from a given node end up in the same broker.
 
 Besides, a broker does not know any router by advance. The process is seemingly similar to the way
 gateways and routers are getting to know each others. A router will initiate a communication
