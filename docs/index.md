@@ -85,10 +85,9 @@ response mechanism //TODO add a link).
 
 ## Router
 
-Routers are entry points of the network from Nodes perspective. A Router receives packets
-gathered by some Gateways and initially transmitted by Nodes. Then, it forwards those packets
-to one or several Brokers. The communication is seemingly bi-directional: Routers may also
-transfer packets from Broker to Gateways. 
+Routers are entry points of the network from Nodes perspective. Packets transmitted by Nodes are forwarded to a specific Router from one or several Gateways. The Router then forwards those packets
+to one or several Brokers. The communication is bi-directional: Routers may also
+transfer packets from Broker to Gateways.
 
 -------------------
 ![Uplink forwarding](img/uplink_router.svg)
