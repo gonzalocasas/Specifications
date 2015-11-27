@@ -7,8 +7,8 @@ This document hereby refers to the content of the whole website. Any contributor
 and could give a hand in several manners:
 
 - Looking for and correcting typos
-- Add relevant and non redundant information
-- Complete a part marked as //TODO
+- Adding relevant and non redundant information
+- Completing a part marked as //TODO
 
 **Regardless of what you'll attempt, make sure to check [the issues list on
 GitHub][github_issues] before doing anything**. Thus, if nobody is already working on something
