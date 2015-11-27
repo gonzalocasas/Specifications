@@ -36,8 +36,7 @@ components:
 - Network Servers
 - Handlers
 
-Incidentally, those components are interacting with other external entities on which we have -
-if any - only few controls:
+Additionally, these components interact with external entities over which we have little or no control:
 
 - Nodes (also known as end-devices)
 - Gateways
