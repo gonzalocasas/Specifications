@@ -15,9 +15,9 @@ node is controlled by a unique broker. There is for the moment no duplication or
 possible. A broker does not have access to network servers different from the one it has been
 assigned. A node isn't shared and all packets coming from a given node end up in the same broker.
 
-Besides, a broker does not know any router by advance. The process is seemingly similar to the way
-gateways and routers are getting to know each others. A router will initiate a communication
-toward a broker. After dealing with the communication, the broker may reply to the router and
+Besides, a broker does not know any router in advance. The process is basically similar to the way
+gateways and routers discover each other. A router will initiate a communication
+with a broker. After dealing with the communication, the broker may reply to the router and
 will forget about its existence. Brokers are known from routers, like routers are
 known from gateways. 
 
