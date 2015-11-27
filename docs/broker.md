@@ -22,7 +22,7 @@ will forget about its existence. Brokers are known from routers, like routers ar
 known from gateways. 
 
 On the other hand, brokers communicate with a bunch of handlers that have registered themselves
-beforehand. This way, when a device joins the network every broker has to communicate with its
+beforehand. This way, when a end-device joins the network every broker has to communicate with its
 own handlers list to determine wether or not it has to handle packets incoming from that
 device. The previous assertion assumes that a given handler isn't registered to several
  brokers. 
