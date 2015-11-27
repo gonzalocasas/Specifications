@@ -23,7 +23,7 @@ known from gateways.
 
 On the other hand, brokers communicate with a bunch of handlers that have registered themselves
 beforehand. This way, when a end-device joins the network every broker has to communicate with its
-own handlers list to determine wether or not it has to handle packets incoming from that
+own handlers list to determine whether or not it has to handle packets incoming from that
 device. The previous assertion assumes that a given handler isn't registered to several
  brokers. 
 
