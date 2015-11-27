@@ -48,7 +48,7 @@ Additionally, these components interact with external entities over which we hav
 -------------------
 
 ## Node
-Nodes or end-devices refer to one end of the chain. Devices emit signals using
+Nodes or end-devices refer to one end of the chain. End-devices emit signals using
 [*LoRa*][lora_technology] modulation and frequency range towards Gateways. They are split into
 3 classes: 
 
@@ -66,7 +66,7 @@ mechanisms to handle class B and class C but they are irrevelant with the curren
 ## Gateway
 Gateways might be seen as a way to transform multiple messages emitters into one much more
 demanding emitter. Therefore, a Gateway gathers [*LoRa*][lora_technology] signals coming from a
-bunch of near end-devices. A given device does not need to know the nearest gateways, nor it
+bunch of near end-devices. A given end-device does not need to know the nearest gateways, nor it
 has to communicate with a specific one - signals are simply broadcasted into the wild open. 
 
 Gateways receive signals which reach them, and forward the message to a dedicated Router. The
@@ -104,14 +104,14 @@ same end-device (shared by several segments / Gateways), all duplicates are mana
 Broker and are sent to a corresponding Handler.
 
 A Broker is thereby able to check the integrity of a packet and is closely communicating with a
-Network Server in order to administrate the related device. As an order of magnitude, Brokers
+Network Server in order to administrate the related end-device. As an order of magnitude, Brokers
 are designed to be in charge of a whole country or region (if the region has enough activity to
 deserve a dedicated Broker).
 
 ## Network Server
 
 Network servers are processing [MAC][mac] commands emitted by end-devices as well as taking care
-of the data rates and the frequency of the devices. Network Servers would emit commands to
+of the data rates and the frequency of the end-devices. Network Servers would emit commands to
 optimize the network by adjusting end-devices data rates / frequencies unless the node is
 requesting to keep its configuration as is. 
 
