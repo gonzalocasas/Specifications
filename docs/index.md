@@ -103,7 +103,7 @@ same end-device (shared by several segments / Gateways), all duplicates are mana
 Broker and are sent to a corresponding Handler.
 
 A Broker is thereby able to check the integrity of a packet and is closely communicating with a
-Network Server in order to administrate the related end-device. As an order of magnitude, Brokers
+Network Server in order to administrate the related end-device. For a reference of magnitude, Brokers
 are designed to be in charge of a whole country or region (if the region has enough activity to
 deserve a dedicated Broker).
 
